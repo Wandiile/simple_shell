@@ -12,6 +12,18 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
+
+#define CMD_NORM	0
+#define CMD_OR		1
+#define CMD_AND		2
+#define CMD_CHAIN	3
+
+#define READ_BUF_SIZE 1024
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH -1
+
 extern char **environ;
 
 
@@ -53,9 +65,17 @@ typedef struct passinfo
 	int linecount_flag;
 	list_s *env;
 	char **environ;
+
+	char **cmd_buf;
+	int cmd_buf_type;
+	int readfd;
+	int histcount;
 } info_s;
 
-
+#define INFO_INIT
+{NULL, NULL, NULL, 0, 0, 0, 0,
+NULL, NULL, NULL, NULL, NULL, 0, 0, NULL,
+0, 0, 0}
 
 /**
  *struct builtin - contains a builtin string and related function
