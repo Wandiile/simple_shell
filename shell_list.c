@@ -7,9 +7,9 @@
  * @num: node index used by history
  * Return: size of list
  */
-list_s *add_node(list_s **head, const char *str, int num)
+list_t *add_node(list_t **head, const char *str, int num)
 {
-	list_s *new_head;
+	list_t *new_head;
 
 	if (!head)
 		return (NULL);
@@ -39,18 +39,18 @@ list_s *add_node(list_s **head, const char *str, int num)
  * @num: node index used by history
  * Return: size of list
  */
-list_s *add_node_end(list_s **head, const char *str, int num)
+list_t *add_node_end(list_t **head, const char *str, int num)
 {
-	list_s *new_node, *node;
+	list_t *new_node, *node;
 
 	if (!head)
 		return (NULL);
 
 	node = *head;
-	new_node = malloc(sizeof(list_s));
+	new_node = malloc(sizeof(list_t));
 	if (!new_node)
 		return (NULL);
-	_memset((void *)new_node, 0, sizeof(list_s));
+	_memset((void *)new_node, 0, sizeof(list_t));
 	new_node->num = num;
 	if (str)
 	{
@@ -78,15 +78,15 @@ list_s *add_node_end(list_s **head, const char *str, int num)
  *
  * Return: size of list
  */
-size_s print_list_str(const list_s *i)
+size_t print_list_str(const list_t *i)
 {
-	size_s x = 0;
+	size_t x = 0;
 
 	while (i)
 	{
 		_puts(i->str ? i->str : "(nil)");
 		_puts("\n");
-		i = i->next;
+		x = i->next;
 		x++;
 	}
 	return (x);
@@ -101,7 +101,7 @@ size_s print_list_str(const list_s *i)
  */
 int delete_node_at_index(list_s **head, unsigned int index)
 {
-	list_s *node, *prev_node;
+	list_t *node, *prev_node;
 	unsigned int x = 0;
 
 	if (!head || !*head)
@@ -138,7 +138,7 @@ int delete_node_at_index(list_s **head, unsigned int index)
  *
  * Return: void
  */
-void free_list(list_s **head_ptr)
+void free_list(list_t **head_ptr)
 {
 	list_t *node, *next_node, *head;
 
