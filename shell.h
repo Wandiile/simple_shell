@@ -12,17 +12,27 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#define CONVERT_LOWERCASE	1
-#define CONVERT_UNSIGNED	2
+
+#define READ_BUF_SIZE 1024
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH -1
+
 
 #define CMD_NORM	0
 #define CMD_OR		1
 #define CMD_AND		2
 #define CMD_CHAIN	3
 
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+
+#define CONVERT_LOWERCASE	1
+#define CONVERT_UNSIGNED	2
+
+
+#define USE_GETLINE 0
+#define USE_STRTOK 0
+
+#define HIST_FILE
+#define HIST_MAX	4096
 
 extern char **environ;
 
@@ -41,8 +51,7 @@ typedef struct liststr
 } list_s;
 
 /**
- *struct passinfo - contains pseudo-arguements to pass into a function,
- *		allowing uniform prototype for function pointer struct
+ *struct passinfo - contains pseudo-arguements to pass into a function.
  *@arg: a string generated from getline containing arguements
  *@argv: an array of strings generated from arg
  *@path: a string path for the current command
@@ -50,9 +59,17 @@ typedef struct liststr
  *@line_count: the error count
  *@error_num: the error code for exit()s
  *@linecount_flag: if on count this line of input
+ *@fname: the program filename
  *@env: linked list local copy of environ
- *@environ: custom modified copy of environ from LL env
-
+ *@environ: custom modified copy of environ
+ *@history: the history node
+ *@alias: the alias node
+ *@env_changed: on if environ was changed
+ *@status: the return status of the last exec'd command
+ *@cmd_buf: address of pointer to cmd_buf, on if chaining
+ *@cmd_buf_type: CMD_type ||, &&.
+ *@readfd: the fd from which to read line input
+ *@histcount: the history line number count
  */
 typedef struct passinfo
 {
@@ -63,8 +80,13 @@ typedef struct passinfo
 	unsigned int line_count;
 	int error_num;
 	int linecount_flag;
+	char *fname;
 	list_s *env;
+	list_s *history;
+	list_s *alias;
 	char **environ;
+	int env_changed;
+	int status;
 
 	char **cmd_buf;
 	int cmd_buf_type;
@@ -73,8 +95,8 @@ typedef struct passinfo
 } info_s;
 
 #define INFO_INIT
-{NULL, NULL, NULL, 0, 0, 0, 0,
-NULL, NULL, NULL, NULL, NULL, 0, 0, NULL,
+{NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL
+, 0, 0, NULL,
 0, 0, 0}
 
 /**
@@ -126,6 +148,17 @@ char *_strncpy(char *, char *, int);
 char *_strncat(char *, char *, int);
 char *_strchr(char *, char);
 
+/* shell_tokenizer.c */
+char **strtow(char *, char *);
+char **strtow2(char *, char);
+
+/* shell_realloc.c */
+char *_memset(char *, char, unsigned int);
+void ffree(char **);
+void *_realloc(void *, unsigned int, unsigned int);
+
+/* shell_memory.c */
+int bfree(void **);
 
 /* shell_atoi.c */
 int interactive(info_s *);
@@ -133,19 +166,70 @@ int is_delim(char, char *);
 int _isalpha(int);
 int _atoi(char *);
 
+/* shell_errors1.c */
+int _erratoi(char *);
+void print_error(info_s *, char *);
+int print_d(int, int);
+char *convert_number(long int, int, int);
+void remove_comments(char *);
 
 /* shell_builtin.c */
 int _exit(info_s *);
 int _cd(info_s *);
 int _help(info_s *);
 
-/*shell_environ.c*/
+/* shell_builtin1.c */
+int _history(info_s *);
+int _alias(info_s *);
+
+/*shell_getline.c */
+ssize_s get_input(info_s *);
+int _getline(info_s *, char **, size_s *);
+void sigintHandler(int);
+
+/* shell_getinfo.c */
+void clear_info(info_s *);
+void set_info(info_s *, char **);
+void free_info(info_s *, int);
+
+/* toem_environ.c */
 char *_getenv(info_s *, const char *);
 int _env(info_s *);
 int _setenv(info_s *);
 int _unsetenv(info_s *);
 int populate_env_list(info_s *);
 
+/* shell_getenv.c */
+char **get_environ(info_s *);
+int _unsetenv(info_s *, char *);
+int _setenv(info_s *, char *, char *);
+
+/* shell_history.c */
+char *get_history_file(info_s *info);
+int write_history(info_s *info);
+int read_history(info_s *info);
+int build_history_list(info_s *info, char *buf, int linecount);
+int renumber_history(info_s *info);
+
+/* shell_lists.c */
+list_s *add_node(list_s **, const char *, int);
+list_s *add_node_end(list_s **, const char *, int);
+size_s print_list_str(const list_s *);
+int delete_node_at_index(list_s **, unsigned int);
+void free_list(list_s **);
+
+/* shell_lists1.c */
+size_s list_len(const list_s *);
+char **list_to_strings(list_s *);
+size_s print_list(const list_s *);
+list_s *node_starts_with(list_s *, char *, char);
+ssize_s get_node_index(list_s *, list_s *);
+
+/* shell_vars.c */
+int is_chain(info_s *, char *, size_s *);
+void check_chain(info_s *, char *, size_s *, size_s, size_s);
+int replace_alias(info_s *);
+int replace_vars(info_s *);
+int replace_string(char **, char *);
 
 #endif
-
