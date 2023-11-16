@@ -1,11 +1,11 @@
 #include "shell.h"
 
 /**
- * _env - prints the current environment
+ * _myenv - prints the current environment
  * @info: Used to maintain constant function prototype.
  * Return: Always 0
  */
-int _env(info_s *info)
+int _myenv(info_t *info)
 {
 	print_list_str(info->env);
 	return (0);
@@ -18,9 +18,9 @@ int _env(info_s *info)
  *
  * Return: the value
  */
-char *_getenv(info_s *info, const char *name)
+char *_getenv(info_t *info, const char *name)
 {
-	list_s *node = info->env;
+	list_t *node = info->env;
 	char *a;
 
 	while (node)
@@ -34,11 +34,11 @@ char *_getenv(info_s *info, const char *name)
 }
 
 /**
- * _setenv - Initialize a new environment variable.
+ * _mysetenv - Initialize a new environment variable.
  * @info: Used to maintain constant function prototype.
  *  Return: Always 0
  */
-int _setenv(info_s *info)
+int _mysetenv(info_t *info)
 {
 	if (info->argc != 3)
 	{
@@ -51,11 +51,11 @@ int _setenv(info_s *info)
 }
 
 /**
- * _unsetenv - Remove an environment variable
+ * _myunsetenv - Remove an environment variable
  * @info: Used to maintain constant function prototype.
  *  Return: Always 0
  */
-int _unsetenv(info_s *info)
+int _unsetenv(info_t *info)
 {
 	int x;
 
@@ -75,10 +75,10 @@ int _unsetenv(info_s *info)
  * @info: Used to maintain constant function prototype.
  * Return: Always 0
  */
-int populate_env_list(info_s *info)
+int populate_env_list(info_t *info)
 {
-	list_s *node = NULL;
-	size_s x;
+	list_t *node = NULL;
+	size_t x;
 
 	for (x = 0; environ[x]; x++)
 		add_node_end(&node, environ[x], 0);
