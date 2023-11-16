@@ -4,10 +4,9 @@
  * hsh - main shell loop
  * @info: the parameter & return info struct
  * @av: the argument vector from main()
- *
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(info_s *info, char **av)
+int hsh(info_t *info, char **av)
 {
 	ssize_s r = 0;
 	int builtin_ret = 0;
@@ -46,13 +45,12 @@ int hsh(info_s *info, char **av)
 /**
  * find_builtin - finds a builtin command
  * @info: the parameter & return info struct
- *
  * Return: -1 if builtin not found,
  * 0 if builtin executed successfully,
  * 1 if builtin found but not successful,
  * -2 if builtin signals exit()
  */
-int find_builtin(info_s *info)
+int find_builtin(info_t *info)
 {
 	int x, built_in_ret = -1;
 	builtin_table builtintbl[] = {
@@ -67,7 +65,7 @@ int find_builtin(info_s *info)
 		{NULL, NULL}
 	};
 
-	for (x = 0; builtintbl[i].type; x++)
+	for (x = 0; builtintbl[x].type; x++)
 		if (_strcmp(info->argv[0], builtintbl[x].type) == 0)
 		{
 			info->line_count++;
@@ -82,7 +80,7 @@ int find_builtin(info_s *info)
  * @info: the parameter & return info structure
  * Return: void
  */
-void find_cmd(info_s *info)
+void find_cmd(info_t *info)
 {
 	char *path = NULL;
 	int x, j;
@@ -93,7 +91,7 @@ void find_cmd(info_s *info)
 		info->line_count++;
 		info->linecount_flag = 0;
 	}
-	for (x = 0, j = 0; info->arg[x]; i++)
+	for (x = 0, j = 0; info->arg[x]; x++)
 		if (!is_delim(info->arg[x], " \t\n"))
 			j++;
 	if (!j)
@@ -123,7 +121,7 @@ void find_cmd(info_s *info)
  * @info: the parameter & return info struct
  * Return: void
  */
-void fork_cmd(info_s *info)
+void fork_cmd(info_t *info)
 {
 	pid_s child_pid;
 
