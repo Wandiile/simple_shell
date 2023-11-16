@@ -6,7 +6,7 @@
  *  Return: exits with a given exit status
  *         (0) if info.argv[0] != "exit"
  */
-int _exit(info_s *info)
+int _exit(info_t *info)
 {
 	int checkexit;
 
@@ -24,7 +24,7 @@ int _exit(info_s *info)
 		info->error_num = _erratoi(info->argv[1]);
 		return (-2);
 	}
-	info->err_num = -1;
+	info->error_num = -1;
 	return (-2);
 }
 
@@ -33,7 +33,7 @@ int _exit(info_s *info)
  * @info: Used to maintain function prototype.
  *  Return: Always 0
  */
-int _cd(info_s *info)
+int _cd(info_t *info)
 {
 	char *t, *dir, buffer[1024];
 	int chdir_ret;
@@ -82,7 +82,7 @@ int _cd(info_s *info)
  * @info: Used to maintain function prototype.
  *  Return: Always 0
  */
-int _help(info_s *info)
+int _help(info_t *info)
 {
 	char **arg_array;
 
