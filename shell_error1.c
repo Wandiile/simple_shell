@@ -69,7 +69,7 @@ int print_d(int input, int fd)
 	else
 		_abs_ = input;
 	current = _abs_;
-	for (i = 1000000000; x > 1; x /= 10)
+	for (x = 1000000000; x > 1; x /= 10)
 	{
 		if (_abs_ / x)
 		{
@@ -128,8 +128,8 @@ void remove_comments(char *buf)
 {
 	int x;
 
-	for (x = 0; buf[x] != '\0'; i++)
-		if (buf[i] == '#' && (!x || buf[x - 1] == ' '))
+	for (x = 0; buf[x] != '\0'; x++)
+		if (buf[x] == '#' && (!x || buf[x - 1] == ' '))
 		{
 			buf[x] = '\0';
 			break;
