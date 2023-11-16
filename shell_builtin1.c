@@ -5,7 +5,7 @@
  * @info: Used to maintain function prototype.
  *  Return: Always 0
  */
-int _history(info_s *info)
+int _history(info_t *info)
 {
 	print_list(info->history);
 	return (0);
@@ -18,7 +18,7 @@ int _history(info_s *info)
  *
  * Return: Always 0 on success, 1 on error
  */
-int unset_alias(info_s *info, char *str)
+int unset_alias(info_t *info, char *str)
 {
 	char *a, b;
 	int ret;
@@ -41,7 +41,7 @@ int unset_alias(info_s *info, char *str)
  *
  * Return: Always 0 on success, 1 on error
  */
-int set_alias(info_s *info, char *str)
+int set_alias(info_t *info, char *str)
 {
 	char *a;
 
@@ -61,7 +61,7 @@ int set_alias(info_s *info, char *str)
  *
  * Return: Always 0 on success, 1 on error
  */
-int print_alias(list_s *node)
+int print_alias(list_t *node)
 {
 	char *a = NULL, *c = NULL;
 
@@ -83,11 +83,11 @@ int print_alias(list_s *node)
  * @info: Used to maintain function prototype.
  *  Return: Always 0
  */
-int _myalias(info_s *info)
+int _myalias(info_t *info)
 {
 	int x = 0;
 	char *a = NULL;
-	list_s *node = NULL;
+	list_t *node = NULL;
 
 	if (info->argc == 1)
 	{
@@ -99,11 +99,11 @@ int _myalias(info_s *info)
 		}
 		return (0);
 	}
-	for (x = 1; info->argv[x]; i++)
+	for (x = 1; info->argv[x]; x++)
 	{
 		a = _strchr(info->argv[x], '=');
 		if (a)
-			set_alias(info, info->argv[i]);
+			set_alias(info, info->argv[x]);
 		else
 			print_alias(node_starts_with(info->alias, info->argv[x], '='));
 	}
