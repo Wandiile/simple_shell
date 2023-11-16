@@ -8,33 +8,30 @@
  *
  * Return: bytes read
  */
-ssize_s input_buf(info_s *info, char **buf, size_s *len)
+ssize_t input_buf(info_t *info, char **buf, size_t *len)
 {
-	ssize_s r = 0;
-	size_s len_p = 0;
+	ssize_t r = 0;
+	size_t len_p = 0;
 
 	if (!*len)
 	{
-		/*bfree((void **)info->cmd_buf);*/
+
 		free(*buf);
 		*buf = NULL;
 		signal(SIGINT, sigintHandler);
-#if USE_GETLINE
 		r = getline(buf, &len_p, stdin);
-#else
 		r = _getline(info, buf, &len_p);
-#endif
+
 		if (r > 0)
 		{
 			if ((*buf)[r - 1] == '\n')
 			{
-				(*buf)[r - 1] = '\0'; /* remove trailing newline */
+				(*buf)[r - 1] = '\0'; 
 				r--;
 			}
 			info->linecount_flag = 1;
 			remove_comments(*buf);
 			build_history_list(info, *buf, info->histcount++);
-			/* if (_strchr(*buf, ';')) is this a command chain? */
 			{
 				*len = r;
 				info->cmd_buf = buf;
@@ -97,7 +94,7 @@ ssize_s get_input(info_s *info)
  *
  * Return: r
  */
-ssize_s read_buf(info_s *info, char *buf, size_s *x)
+ssize_s read_buf(info_t *info, char *buf, size_t *x)
 {
 	ssize_t r = 0;
 
@@ -116,12 +113,12 @@ ssize_s read_buf(info_s *info, char *buf, size_s *x)
  * @length: size of preallocated ptr buffer if not NULL
  * Return: s
  */
-int _getline(info_s *info, char **ptr, size_s *length)
+int _getline(info_t *info, char **ptr, size_t *length)
 {
 	static char buf[READ_BUF_SIZE];
-	static size_s x, len;
-	size_s j;
-	ssize_s r = 0, s = 0;
+	static size_t x, len;
+	size_t j;
+	ssize_t r = 0, s = 0;
 	char *p = NULL, *new_p = NULL, *b;
 
 	p = *ptr;
@@ -158,7 +155,6 @@ int _getline(info_s *info, char **ptr, size_s *length)
 /**
  * sigintHandler - blocks ctrl-C
  * @sig_num: the signal number
- *
  * Return: void
  */
 void sigintHandler(__attribute__((unused))int sig_num)
