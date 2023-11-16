@@ -4,7 +4,7 @@
  * clear_info - initializes info_t struct
  * @info: struct address
  */
-void clear_info(info_s *info)
+void clear_info(info_t *info)
 {
 	info->arg = NULL;
 	info->argv = NULL;
@@ -17,7 +17,7 @@ void clear_info(info_s *info)
  * @info: struct address
  * @av: argument vector
  */
-void set_info(info_s *info, char **av)
+void set_info(info_t *info, char **av)
 {
 	int x = 0;
 
@@ -35,7 +35,7 @@ void set_info(info_s *info, char **av)
 				info->argv[1] = NULL;
 			}
 		}
-		for (x = 0; info->argv && info->argv[x]; i++)
+		for (x = 0; info->argv && info->argv[x]; x++)
 			;
 		info->argc = x;
 
@@ -49,7 +49,7 @@ void set_info(info_s *info, char **av)
  * @info: struct address
  * @all: true if freeing all fields
  */
-void free_info(info_s *info, int all)
+void free_info(info_t *info, int all)
 {
 	ffree(info->argv);
 	info->argv = NULL;
