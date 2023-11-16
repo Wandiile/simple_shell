@@ -5,7 +5,7 @@
  * @info: Used to maintain function prototype.
  * Return: Always 0
  */
-char **get_environ(info_s *info)
+char **get_environ(info_t *info)
 {
 	if (!info->environ || info->env_changed)
 	{
@@ -22,10 +22,10 @@ char **get_environ(info_s *info)
  *  Return: 1 on delete, 0 otherwise
  * @var: the string env var property
  */
-int _unsetenv(info_s *info, char *var)
+int _unsetenv(info_t *info, char *var)
 {
-	list_s *node = info->env;
-	size_s x = 0;
+	list_t *node = info->env;
+	size_t x = 0;
 	char *a;
 
 	if (!node || !var)
@@ -54,10 +54,10 @@ int _unsetenv(info_s *info, char *var)
  * @value: the string env var value
  *  Return: Always 0
  */
-int _setenv(info_s *info, char *var, char *value)
+int _setenv(info_t *info, char *var, char *value)
 {
 	char *buf = NULL;
-	list_s *node;
+	list_t *node;
 	char *a;
 
 	if (!var || !value)
